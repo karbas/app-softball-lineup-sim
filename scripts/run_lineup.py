@@ -3,15 +3,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from softball_sim.csv_import import load_batting_csv, merge_lines
+from softball_sim.stats_import import load_stats
 from softball_sim.model import build_params
 from softball_sim.sim import SimConfig, inning_start_distribution, simulate_games
 
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="SoftballSim: run lineup simulations")
-    p.add_argument("--season", required=True, help="Season CSV export")
-    p.add_argument("--two", required=True, help="2-game CSV export")
+    p.add_argument("--stats", required=True, help="Stats JSON file (season + two_game)")
     p.add_argument("--lineup", required=True, help="Lineup as 10 names: 'First Last; First Last; ...'")
     p.add_argument("--R", type=float, default=0.33)
     p.add_argument("--err-bases", type=int, default=2)
@@ -41,13 +40,10 @@ def parse_lineup(s: str):
 def main() -> None:
     a = parse_args()
 
-    season_lines = load_batting_csv(Path(a.season))
-    two_lines = load_batting_csv(Path(a.two))
-
-    season = merge_lines(season_lines)
-    two = merge_lines(two_lines)
-
-    merged = merge_lines(list(season.values()) + list(two.values()))
+    stats = load_stats(Path(a.stats))
+    season = stats["season"]
+    two = stats["two_game"]
+    merged = stats["combined"]
 
     params = build_params(
         merged,

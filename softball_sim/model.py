@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Tuple
 
-from .csv_import import BatLine
+from .stats_import import BatLine
 
 
 @dataclass(frozen=True)

@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Sequence, Tuple
 
-from softball_sim.csv_import import load_batting_csv, merge_lines
+from softball_sim.stats_import import load_stats
 from softball_sim.model import build_params, BatterParams
 from softball_sim.sim import SimConfig
 
@@ -15,8 +15,7 @@ Name = Tuple[str, str]
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Optimize lineup for weighted runs/inning (game-reset).")
-    p.add_argument("--season", required=True)
-    p.add_argument("--two", required=True)
+    p.add_argument("--stats", required=True, help="Stats JSON file (season + two_game)")
     p.add_argument("--R", type=float, default=0.33)
     p.add_argument("--err-bases", type=int, default=2)
     p.add_argument("--seed", type=int, default=424242)
@@ -109,12 +108,10 @@ def inning_mean(lineup: Sequence[BatterParams], cfg: SimConfig, games: int, seed
 def main() -> None:
     a = parse_args()
 
-    season_lines = load_batting_csv(Path(a.season))
-    two_lines = load_batting_csv(Path(a.two))
-
-    season = merge_lines(season_lines)
-    two = merge_lines(two_lines)
-    merged = merge_lines(list(season.values()) + list(two.values()))
+    stats = load_stats(Path(a.stats))
+    season = stats["season"]
+    two = stats["two_game"]
+    merged = stats["combined"]
 
     params = build_params(
         merged,
