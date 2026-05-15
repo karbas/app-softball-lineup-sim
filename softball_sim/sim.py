@@ -66,10 +66,10 @@ def simulate_games(
 ) -> List[int]:
     """Return total runs per game (length=games)."""
     random.seed(seed)
-    batter_i = 0
     totals: List[int] = []
 
     for _ in range(games):
+        batter_i = 0
         game_runs = 0
         for _inn in range(cfg.innings):
             outs = 0
@@ -94,10 +94,10 @@ def inning_start_distribution(
 ) -> List[float]:
     """Percent of innings that start at each lineup index."""
     random.seed(seed)
-    batter_i = 0
     starts = [0] * len(lineup)
 
     for _ in range(games):
+        batter_i = 0
         for _inn in range(cfg.innings):
             starts[batter_i] += 1
             outs = 0
