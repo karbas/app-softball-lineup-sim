@@ -11,7 +11,7 @@ from softball_sim.sim import SimConfig, inning_start_distribution, simulate_game
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="SoftballSim: run lineup simulations")
     p.add_argument("--stats", required=True, help="Stats JSON file (season + two_game)")
-    p.add_argument("--lineup", required=True, help="Lineup as 10 names: 'First Last; First Last; ...'")
+    p.add_argument("--lineup", required=True, help="Lineup as N names: 'First Last; First Last; ...' (typically 9-13)")
     p.add_argument("--R", type=float, default=0.33)
     p.add_argument("--err-bases", type=int, default=2)
     p.add_argument("--games", type=int, default=200_000)
@@ -32,8 +32,8 @@ def parse_lineup(s: str):
         first = toks[0]
         last = toks[1]
         out.append((first, last))
-    if len(out) != 10:
-        raise SystemExit(f"Expected 10 batters, got {len(out)}")
+    if len(out) < 1:
+        raise SystemExit("Lineup must contain at least 1 batter")
     return out
 
 

@@ -30,11 +30,8 @@ def parse_args() -> argparse.Namespace:
 
     p.add_argument(
         "--players",
-        default=(
-            "Analeah Hernandez; Teliya Henderson; Isabel Hill; Brinkley Maldonado; "
-            "Evalynn Jimenez; Zainy Aziz; Cara Cox; Sofia Jimenez; Paislee Buggs; Olivia Butcher"
-        ),
-        help="10 players as 'First Last; First Last; ...'",
+        required=True,
+        help="Roster as N players: 'First Last; First Last; ...' (typically 9-13)",
     )
     return p.parse_args()
 
@@ -47,8 +44,8 @@ def parse_list(s: str) -> List[Name]:
         if len(toks) < 2:
             raise SystemExit(f"Bad player entry: {part!r}")
         out.append((toks[0], toks[1]))
-    if len(out) != 10:
-        raise SystemExit(f"Expected 10 players, got {len(out)}")
+    if len(out) < 1:
+        raise SystemExit("Roster must contain at least 1 player")
     return out
 
 
@@ -138,7 +135,7 @@ def main() -> None:
         cur = inning_mean(lineup, cfg, games=a.games_eval, seed=a.seed)
 
         for _ in range(a.iters):
-            i, j = rng.sample(range(10), 2)
+            i, j = rng.sample(range(len(order)), 2)
             cand = order[:]
             cand[i], cand[j] = cand[j], cand[i]
             cand_lineup = [params[n] for n in cand]
