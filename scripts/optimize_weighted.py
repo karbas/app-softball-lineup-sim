@@ -27,6 +27,12 @@ def parse_args() -> argparse.Namespace:
 
     p.add_argument("--blend-sofia", type=float, default=0.6)
     p.add_argument("--flip-olivia-brinkley", action="store_true")
+    p.add_argument(
+        "--shrink-k",
+        type=float,
+        default=0.0,
+        help="Pseudo-AB toward team mean (Bayesian shrinkage). 0 = none; ~10 is a reasonable default for small-sample 8U-10U data.",
+    )
 
     p.add_argument(
         "--players",
@@ -116,6 +122,7 @@ def main() -> None:
         two_game=two,
         sofia_blend_w2=a.blend_sofia,
         flip_olivia_brinkley=a.flip_olivia_brinkley,
+        shrink_k=a.shrink_k,
     )
 
     players = parse_list(a.players)
