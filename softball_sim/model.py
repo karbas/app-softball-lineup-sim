@@ -79,22 +79,8 @@ def _shrunk_params(
     return BatterParams(avg=avg, pK=pK, hit_probs=hp)  # type: ignore
 
 
-def blend_params(p2: BatterParams, p_season: BatterParams, w2: float) -> BatterParams:
-    # Blend rates and hit-type distribution.
-    avg = w2 * p2.avg + (1 - w2) * p_season.avg
-    pK = w2 * p2.pK + (1 - w2) * p_season.pK
-    hp = tuple(w2 * p2.hit_probs[i] + (1 - w2) * p_season.hit_probs[i] for i in range(4))
-    s = sum(hp)
-    hp = tuple(x / s for x in hp) if s else (1.0, 0.0, 0.0, 0.0)
-    return BatterParams(avg=avg, pK=pK, hit_probs=hp)  # type: ignore
-
-
 def build_params(
     merged: Dict[Tuple[str, str], BatLine],
-    season: Dict[Tuple[str, str], BatLine] | None = None,
-    two_game: Dict[Tuple[str, str], BatLine] | None = None,
-    sofia_blend_w2: float | None = None,
-    flip_olivia_brinkley: bool = False,
     shrink_k: float = 0.0,
 ) -> Dict[Tuple[str, str], BatterParams]:
     if shrink_k > 0:
@@ -105,22 +91,5 @@ def build_params(
         }
     else:
         params = {k: params_from_batline(v) for k, v in merged.items()}
-
-    if sofia_blend_w2 is not None:
-        if season is None or two_game is None:
-            raise ValueError("Need season and two_game maps to blend Sofia")
-        key = ("Sofia", "Jimenez")
-        if key in season and key in two_game:
-            params[key] = blend_params(
-                params_from_batline(two_game[key]),
-                params_from_batline(season[key]),
-                sofia_blend_w2,
-            )
-
-    if flip_olivia_brinkley:
-        ol = ("Olivia", "Butcher")
-        br = ("Brinkley", "Maldonado")
-        if ol in params and br in params:
-            params[ol], params[br] = params[br], params[ol]
 
     return params
