@@ -22,8 +22,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--shrink-k",
         type=float,
-        default=0.0,
-        help="Pseudo-AB toward team mean (Bayesian shrinkage). 0 = none; ~10 is a reasonable default for small-sample 8U-10U data.",
+        default=10.0,
+        help="Pseudo-AB toward team mean (Bayesian shrinkage). 0 = none; ~10 (the default) is reasonable for small-sample 8U-10U data. Pass --shrink-k 0 to use raw rates.",
     )
     return p.parse_args()
 
@@ -72,7 +72,7 @@ def main() -> None:
 
     dist = inning_start_distribution(lineup, cfg, games=a.games, seed=a.seed)
 
-    print(f"E[runs]={exp:.3f}  P(<10)={p_lt10:.3f}  score=E-λP={score:.3f}")
+    print(f"E[runs]={exp:.3f}  P(<10)={p_lt10:.3f}  score=E-lambda*P={score:.3f}")
     print("inning_start_dist:")
     for i, v in enumerate(dist, 1):
         print(f"  {i}: {v*100:.2f}%")

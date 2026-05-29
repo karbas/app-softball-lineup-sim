@@ -30,8 +30,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--shrink-k",
         type=float,
-        default=0.0,
-        help="Pseudo-AB toward team mean (Bayesian shrinkage). 0 = none; ~10 is a reasonable default for small-sample 8U-10U data.",
+        default=10.0,
+        help="Pseudo-AB toward team mean (Bayesian shrinkage). 0 = none; ~10 (the default) is reasonable for small-sample 8U-10U data. Pass --shrink-k 0 to use raw rates.",
     )
 
     p.add_argument(
