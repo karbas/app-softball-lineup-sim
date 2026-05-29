@@ -11,7 +11,6 @@ pip install -U pip
 python scripts/run_lineup.py \
   --stats data/stats.json \
   --R 0.33 --err-bases 2 --games 200000 --seed 424242 --lambda 15 \
-  --blend-sofia 0.6 --flip-olivia-brinkley \
   --lineup "Analeah Hernandez; Teliya Henderson; Isabel Hill; Brinkley Maldonado; Evalynn Jimenez; Zainy Aziz; Cara Cox; Sofia Jimenez; Paislee Buggs; Olivia Butcher"
 ```
 
